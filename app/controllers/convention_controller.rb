@@ -4,66 +4,79 @@ class ConventionController < ApplicationController
     @resource_collection = self.controller_name
     @resource_name       = self.controller_name.singularize
     @resource_symbol     = @resource_name.to_sym
-    @resource            = @resource_name.capitalize.constantize.new
-
-    @resource_class_name = @resource.class.name.downcase
-    require @resource_class_name
+    @resource            = @resource_name.capitalize.constantize
   end
 
   def resource_url
     self.send((@resource_collection + '_url').to_sym)
   end
 
+  def collection
+    instance_variable_get('@' + @resource_collection)
+  end
+
+  def collection= value
+    instance_variable_set('@' + @resource_collection, value)
+  end
+
+  def member
+    instance_variable_get('@' + @resource_name)
+  end
+
+  def member= value
+    instance_variable_set('@' + @resource_name, value)
+  end
+
   # GET /@resource
   # GET /@resource.json
   def index
-    @collection = @resource.all
+    self.collection = @resource.all
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @collection }
+      format.json { render json: self.collection }
     end
   end
 
   # GET /@resource/1
   # GET /@resource/1.json
   def show
-    @member = @resource.find(params[:id])
+    self.member = @resource.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render json: @member }
+      format.json { render json: self.member }
     end
   end
 
   # GET /@resource/new
   # GET /@resource/new.json
   def new
-    @member = @resource.new
+    self.member = @resource.new
 
     respond_to do |format|
       format.html # new.html.erb
-      format.json { render json: @member }
+      format.json { render json: self.member }
     end
   end
 
   # GET /@resource/1/edit
   def edit
-    @member = @resource.find(params[:id])
+    self.member = @resource.find(params[:id])
   end
 
   # POST /@resource
   # POST /@resource.json
   def create
-    @member = @resource.new(params[@resource_symbol])
+    self.member = @resource.new(params[@resource_symbol])
 
     respond_to do |format|
-      if @member.save
-        format.html { redirect_to @member, notice: '@resource was successfully created.' }
-        format.json { render json: @member, status: :created, location: @member }
+      if self.member.save
+        format.html { redirect_to self.member, notice: '@resource was successfully created.' }
+        format.json { render json: self.member, status: :created, location: self.member }
       else
         format.html { render action: "new" }
-        format.json { render json: @member.errors, status: :unprocessable_entity }
+        format.json { render json: self.member.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -71,15 +84,15 @@ class ConventionController < ApplicationController
   # PUT /@resource/1
   # PUT /@resource/1.json
   def update
-    @member = @resource.find(params[:id])
+    self.member = @resource.find(params[:id])
 
     respond_to do |format|
-      if @member.update_attributes(params[@resource_symbol])
-        format.html { redirect_to @member, notice: '@resource was successfully updated.' }
+      if self.member.update_attributes(params[@resource_symbol])
+        format.html { redirect_to self.member, notice: '@resource was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
-        format.json { render json: @member.errors, status: :unprocessable_entity }
+        format.json { render json: self.member.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -87,8 +100,8 @@ class ConventionController < ApplicationController
   # DELETE /@resource/1
   # DELETE /@resource/1.json
   def destroy
-    @member = @resource.find(params[:id])
-    @member.destroy
+    self.member = @resource.find(params[:id])
+    self.member.destroy
 
     respond_to do |format|
       format.html { redirect_to resource_url }
