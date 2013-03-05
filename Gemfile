@@ -30,6 +30,7 @@ end
 
 gem 'jquery-rails'
 gem 'haml'
+gem 'inherited_resources'
 gem "active_model_serializers", :github => "rails-api/active_model_serializers"
 
 # To use ActiveModel has_secure_password
