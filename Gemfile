@@ -23,10 +23,13 @@ end
 group :development do
   gem "better_errors"
   gem "binding_of_caller"
+  gem 'pry-rails'
+  gem 'pry-doc'
+  gem 'haml-rails'
 end
 
 gem 'jquery-rails'
-
+gem 'haml'
 gem "active_model_serializers", :github => "rails-api/active_model_serializers"
 
 # To use ActiveModel has_secure_password
